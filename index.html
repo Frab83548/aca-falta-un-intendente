@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Acá falta un intendente — San Pedro de Jujuy</title>
+  <meta name="description" content="Mapa colaborativo de reclamos ciudadanos de San Pedro de Jujuy. Sumate y marcá los problemas de tu barrio." />
+  <meta property="og:title" content="Acá falta un intendente — San Pedro de Jujuy" />
+  <meta property="og:description" content="Mapa colaborativo de reclamos ciudadanos de San Pedro de Jujuy." />
+  <meta property="og:type" content="website" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <div class="afi-wrap">
+    <div id="afi-map"></div>
+    <div class="afi-loading" id="afi-loading">Cargando mapa de San Pedro...</div>
+
+    <!-- Sidebar de categorías / filtros -->
+    <div class="afi-sidebar" id="afi-sidebar"></div>
+
+    <!-- Botón nuevo reclamo -->
+    <div class="afi-topbar">
+      <button class="afi-btn-new" id="afi-new-btn">⚠ Nuevo reclamo</button>
+    </div>
+
+    <!-- Logo "Falta menos para tener un intendente" -->
+    <div class="afi-logo">
+      <div class="afi-logo-t1">FALTA MENOS</div>
+      <div class="afi-logo-t1">PARA TENER UN</div>
+      <div class="afi-logo-t2">INTENDENTE</div>
+    </div>
+
+    <!-- Stats en la esquina inferior izquierda -->
+    <div class="afi-stats" id="afi-stats">Cargando...</div>
+
+    <!-- Selector de zonas / barrios -->
+    <button class="afi-zone-picker" id="afi-zone-btn">📍 Ir a zona ▾</button>
+    <div class="afi-zones-menu" id="afi-zones-menu"></div>
+
+    <!-- Botón para resetear datos (solo localStorage) -->
+    <button class="afi-reset-btn" id="afi-reset-btn" title="Borrar todos los reclamos y volver a los de ejemplo">🔄</button>
+
+    <!-- Modal de nuevo reclamo -->
+    <div class="afi-modal-bg" id="afi-modal">
+      <div class="afi-modal">
+        <h3>Nuevo reclamo</h3>
+        <div class="afi-hint" id="afi-hint">Completá los datos y tocá "Ubicar en el mapa" para marcar el lugar.</div>
+        <label>Categoría</label>
+        <div class="afi-cat-grid" id="afi-cat-grid"></div>
+        <label>Título del reclamo</label>
+        <input type="text" id="afi-title" placeholder="Ej: Pozo gigante en la calle" maxlength="80" />
+        <label>Descripción</label>
+        <textarea id="afi-desc" placeholder="Contá qué está pasando..." maxlength="400"></textarea>
+        <label>Barrio / Zona (opcional)</label>
+        <input type="text" id="afi-zone" placeholder="Ej: Centro, Bº Libertad, Ingenio..." maxlength="60" />
+        <label>Foto (opcional)</label>
+        <input type="file" id="afi-photo" accept="image/*" />
+        <div id="afi-photo-preview" style="display:none;margin-top:8px;">
+          <img id="afi-photo-img" style="max-width:100%;max-height:120px;border-radius:6px;border:1px solid #ccc;" />
+        </div>
+        <div class="afi-modal-actions">
+          <button class="afi-btn-cancel" id="afi-cancel">Cancelar</button>
+          <button class="afi-btn-submit" id="afi-place">Ubicar en el mapa →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.min.js"></script>
+
+  <!-- ============================================================ -->
+  <!-- BACKEND: elegí UNO de los tres comentando/descomentando      -->
+  <!-- ============================================================ -->
+
+  <!-- Opción A: LocalStorage (funciona sin configurar nada, cada usuario ve solo lo suyo) -->
+  <!-- <script src="storage-local.js"></script> -->
+
+  <!-- Opción B: Firebase (compartido, requiere firebase-config.js)
+  <script type="module" src="storage-firebase.js"></script>
+  -->
+
+  <!-- Opción C: Supabase (recomendado - compartido, realtime, fotos, requiere supabase-config.js) -->
+  <script type="module" src="storage-supabase.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

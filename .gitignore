@@ -1,0 +1,31 @@
+# Credenciales - NUNCA subir estos archivos al repositorio público
+supabase-config.js
+firebase-config.js
+
+# Dependencias (por si algún día agregás un build)
+node_modules/
+.pnpm-store/
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Editores
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Variables de entorno
+.env
+.env.local
+.env.*.local
+
+# Builds (por si algún día los agregás)
+dist/
+build/
+.vercel
