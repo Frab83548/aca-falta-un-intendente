@@ -55,6 +55,8 @@
     reclamos: {},
     filters: new Set(CATEGORIES.map(c => c.id)),
     markers: {},
+    reclamosVisible: true,
+    sidebarCollapsed: false,
     pickingLocation: false,
     pendingReclamo: null,
     selectedCat: 'bache',
@@ -105,7 +107,11 @@
   map.addLayer(cluster);
 
   // --- Sidebar de filtros ---
+  const wrap = document.querySelector('.afi-wrap');
+  const sideRail = document.getElementById('afi-side-rail');
   const sidebar = document.getElementById('afi-sidebar');
+  const filterToggleBtn = document.getElementById('afi-filter-toggle');
+  const visibilityBtn = document.getElementById('afi-visibility-btn');
   CATEGORIES.forEach(cat => {
     const chip = document.createElement('div');
     chip.className = 'afi-chip';
@@ -117,6 +123,43 @@
     chip.addEventListener('click', () => toggleFilter(cat.id));
     sidebar.appendChild(chip);
   });
+
+  function updateVisibilityButton(){
+    if (!visibilityBtn) return;
+    const isHidden = !state.reclamosVisible;
+    visibilityBtn.setAttribute('aria-pressed', String(isHidden));
+    visibilityBtn.setAttribute('aria-label', isHidden ? 'Mostrar reclamos' : 'Ocultar reclamos');
+    visibilityBtn.setAttribute('title', isHidden ? 'Mostrar reclamos' : 'Ocultar reclamos');
+    if (wrap) wrap.classList.toggle('afi-claims-hidden', isHidden);
+  }
+
+  function toggleClaimsVisibility(){
+    state.reclamosVisible = !state.reclamosVisible;
+    refreshMarkers();
+    updateVisibilityButton();
+  }
+
+  function updateFilterToggle(){
+    if (!filterToggleBtn) return;
+    const isCollapsed = state.sidebarCollapsed;
+    filterToggleBtn.setAttribute('aria-pressed', String(isCollapsed));
+    filterToggleBtn.setAttribute('aria-label', isCollapsed ? 'Mostrar categorías' : 'Ocultar categorías');
+    filterToggleBtn.setAttribute('title', isCollapsed ? 'Mostrar categorías' : 'Ocultar categorías');
+    if (sideRail) sideRail.classList.toggle('afi-sidebar-collapsed', isCollapsed);
+  }
+
+  function toggleSidebarCollapsed(){
+    state.sidebarCollapsed = !state.sidebarCollapsed;
+    updateFilterToggle();
+    setTimeout(() => map.invalidateSize(), 120);
+  }
+
+  if (visibilityBtn) {
+    visibilityBtn.addEventListener('click', toggleClaimsVisibility);
+  }
+  if (filterToggleBtn) {
+    filterToggleBtn.addEventListener('click', toggleSidebarCollapsed);
+  }
 
   function toggleFilter(catId){
     if (state.filters.has(catId)) state.filters.delete(catId);
@@ -177,6 +220,7 @@
   function refreshMarkers(){
     cluster.clearLayers();
     state.markers = {};
+    if (!state.reclamosVisible) return;
     Object.values(state.reclamos).forEach(r => {
       if (!state.filters.has(r.cat)) return;
       const icon = buildIcon(r.cat, (r.votes || 0) + 1);
@@ -282,9 +326,16 @@
     catGrid.appendChild(opt);
   });
 
-  document.getElementById('afi-new-btn').addEventListener('click', () => openModal());
+  document.querySelectorAll('[data-open-reclamo]').forEach(btn => {
+    btn.addEventListener('click', () => openModal());
+  });
   document.getElementById('afi-cancel').addEventListener('click', () => closeModal());
   document.getElementById('afi-place').addEventListener('click', () => startPlacing());
+
+  /* Cerrar al tocar el fondo (backdrop), sin obligar a Cancelar */
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
 
   // Preview de foto en el modal
   const photoInput = document.getElementById('afi-photo');
@@ -437,6 +488,8 @@
 
       refreshMarkers();
       updateSidebar();
+      updateFilterToggle();
+      updateVisibilityButton();
       updateStats();
       loading.style.display = 'none';
 

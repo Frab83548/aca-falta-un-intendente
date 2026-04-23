@@ -9,66 +9,169 @@
   <meta property="og:description" content="Mapa colaborativo de reclamos ciudadanos de San Pedro de Jujuy." />
   <meta property="og:type" content="website" />
 
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,500;0,600;0,700;1,600;1,700&family=Oswald:ital,wght@0,500;0,600;0,700;1,600;1,700&display=swap" rel="stylesheet" />
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.css" />
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body>
+<body class="afi-page">
 
-  <div class="afi-wrap">
-    <div id="afi-map"></div>
-    <div class="afi-loading" id="afi-loading">Cargando mapa de San Pedro...</div>
+  <!-- Textura global (ruido / grunge suave) -->
+  <div class="afi-global-noise" aria-hidden="true"></div>
 
-    <!-- Sidebar de categorías / filtros -->
-    <div class="afi-sidebar" id="afi-sidebar"></div>
+  <!-- Banner principal: campaña ciudadana -->
+  <header class="afi-hero" role="banner">
+    <div class="afi-hero-map" aria-hidden="true"></div>
+    <div class="afi-hero-overlay" aria-hidden="true"></div>
+    <div class="afi-hero-noise" aria-hidden="true"></div>
 
-    <!-- Botón nuevo reclamo -->
-    <div class="afi-topbar">
-      <button class="afi-btn-new" id="afi-new-btn">⚠ Nuevo reclamo</button>
+    <div class="afi-hero-bar">
+      <span class="afi-hero-bar-text">San Pedro de Jujuy · participación vecinal</span>
     </div>
 
-    <!-- Logo "Falta menos para tener un intendente" -->
-    <div class="afi-logo">
-      <div class="afi-logo-t1">BUSQUEMOS UN</div>
-      <div class="afi-logo-t1">SAN PEDRO</div>
-      <div class="afi-logo-t2">MEJOR</div>
-    </div>
-
-    <!-- Stats en la esquina inferior izquierda -->
-    <div class="afi-stats" id="afi-stats">Cargando...</div>
-
-    <!-- Selector de zonas / barrios -->
-    <button class="afi-zone-picker" id="afi-zone-btn">📍 Ir a zona ▾</button>
-    <div class="afi-zones-menu" id="afi-zones-menu"></div>
-
-    <!-- Botón para resetear datos (solo localStorage) -->
-    <button class="afi-reset-btn" id="afi-reset-btn" title="Borrar todos los reclamos y volver a los de ejemplo">🔄</button>
-
-    <!-- Modal de nuevo reclamo -->
-    <div class="afi-modal-bg" id="afi-modal">
-      <div class="afi-modal">
-        <h3>Nuevo reclamo</h3>
-        <div class="afi-hint" id="afi-hint">Completá los datos y tocá "Ubicar en el mapa" para marcar el lugar.</div>
-        <label>Categoría</label>
-        <div class="afi-cat-grid" id="afi-cat-grid"></div>
-        <label>Título del reclamo</label>
-        <input type="text" id="afi-title" placeholder="Ej: Pozo gigante en la calle" maxlength="80" />
-        <label>Descripción</label>
-        <textarea id="afi-desc" placeholder="Contá qué está pasando..." maxlength="400"></textarea>
-        <label>Barrio / Zona (opcional)</label>
-        <input type="text" id="afi-zone" placeholder="Ej: Centro, Bº Libertad, Ingenio..." maxlength="60" />
-        <label>Foto (opcional)</label>
-        <input type="file" id="afi-photo" accept="image/*" />
-        <div id="afi-photo-preview" style="display:none;margin-top:8px;">
-          <img id="afi-photo-img" style="max-width:100%;max-height:120px;border-radius:6px;border:1px solid #ccc;" />
+    <div class="afi-hero-inner">
+      <div class="afi-hero-layout">
+        <!-- Cartel tipo señal / rombo -->
+        <div class="afi-poster" aria-hidden="true">
+          <div class="afi-poster-grain" aria-hidden="true"></div>
+          <div class="afi-poster-diamond">
+            <div class="afi-poster-label">
+              <span>AQUÍ</span>
+              <span>NO ESTÁN</span>
+              <span>LLEGANDO</span>
+            </div>
+          </div>
         </div>
-        <div class="afi-modal-actions">
-          <button class="afi-btn-cancel" id="afi-cancel">Cancelar</button>
-          <button class="afi-btn-submit" id="afi-place">Ubicar en el mapa →</button>
+
+        <div class="afi-hero-copy">
+          <h1 class="afi-hero-title">Mapa de reclamos y denuncias ciudadanas</h1>
+          <p class="afi-hero-kicker">
+            <span class="afi-hero-kicker-text">No te acostumbres, hagamos que pase</span>
+          </p>
+          <p class="afi-hero-lead">
+            Un espacio donde cada vecino puede mostrar lo que está pasando en su barrio: una vereda rota, un bache, una calle a oscuras, un caño perdiendo agua, la falta de remises, lo que sea.
+          </p>
+          <p class="afi-hero-lead afi-hero-lead--accent">
+            Porque cuando las soluciones no llegan, es momento de que se vea.
+          </p>
         </div>
       </div>
     </div>
-  </div>
+  </header>
+
+  <main class="afi-main">
+    <div class="afi-wrap">
+      <div class="afi-map-shell">
+        <div id="afi-map"></div>
+        <div class="afi-map-shade" aria-hidden="true"></div>
+      </div>
+
+      <div class="afi-loading" id="afi-loading">Cargando mapa de San Pedro...</div>
+
+      <div class="afi-topbar">
+        <button type="button" class="afi-btn-new afi-btn-new-pill" id="afi-new-btn" data-open-reclamo>
+          <svg class="afi-btn-new-icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path fill="#ffd700" stroke="#0a0a0a" stroke-width="1.25" stroke-linejoin="round" d="M12 4 20 18H4L12 4z"/>
+            <path stroke="#0a0a0a" stroke-width="1.8" stroke-linecap="round" d="M12 9v4.5M12 16h.01"/>
+          </svg>
+          <span class="afi-btn-new-label afi-btn-new-label-visible">Nuevo Reclamo</span>
+        </button>
+      </div>
+
+      <div class="afi-side-rail" id="afi-side-rail">
+        <div class="afi-side-rail-top">
+          <button type="button" class="afi-btn-new afi-btn-new-compact" id="afi-new-btn-compact" data-open-reclamo aria-label="Nuevo reclamo" title="Nuevo reclamo">
+            <svg class="afi-btn-new-icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path fill="#ffd700" stroke="#0a0a0a" stroke-width="1.25" stroke-linejoin="round" d="M12 4 20 18H4L12 4z"/>
+              <path stroke="#0a0a0a" stroke-width="1.8" stroke-linecap="round" d="M12 9v4.5M12 16h.01"/>
+            </svg>
+            <span class="afi-btn-new-label">Nuevo reclamo</span>
+          </button>
+
+          <button
+            type="button"
+            class="afi-filter-toggle"
+            id="afi-filter-toggle"
+            aria-pressed="false"
+            aria-label="Ocultar categorías"
+            title="Ocultar categorías"
+          >
+            <span class="afi-rail-btn-inner" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" focusable="false">
+                <path d="M4 6H20L14 13V18L10 20V13L4 6Z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </button>
+        </div>
+
+        <div class="afi-side-rail-divider" aria-hidden="true"></div>
+
+        <div class="afi-sidebar" id="afi-sidebar"></div>
+
+        <div class="afi-side-rail-divider" aria-hidden="true"></div>
+
+        <button
+          type="button"
+          class="afi-visibility-btn"
+          id="afi-visibility-btn"
+          aria-pressed="false"
+          aria-label="Ocultar reclamos"
+          title="Ocultar reclamos"
+        >
+          <span class="afi-rail-btn-inner afi-visibility-btn-inner" aria-hidden="true">
+            <svg class="afi-visibility-icon afi-visibility-icon-on" width="22" height="22" viewBox="0 0 24 24" focusable="false">
+              <path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/>
+              <circle cx="12" cy="12" r="3.1" fill="none" stroke="currentColor" stroke-width="1.9"/>
+            </svg>
+            <svg class="afi-visibility-icon afi-visibility-icon-off" width="22" height="22" viewBox="0 0 24 24" focusable="false">
+              <path d="M3 3 21 21" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
+              <path d="M10.7 5.7C11.13 5.57 11.56 5.5 12 5.5c6 0 9.5 6.5 9.5 6.5a17.2 17.2 0 0 1-3.54 4.23M6.37 6.38A17.25 17.25 0 0 0 2.5 12s3.5 6.5 9.5 6.5c1.25 0 2.39-.28 3.42-.73M9.88 9.88A3.02 3.02 0 0 0 9 12c0 1.66 1.34 3 3 3 .77 0 1.47-.29 2-.77" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </button>
+      </div>
+
+      <div class="afi-logo">
+        <div class="afi-logo-t1">BUSQUEMOS UN</div>
+        <div class="afi-logo-t1">SAN PEDRO</div>
+        <div class="afi-logo-t2">MEJOR</div>
+      </div>
+
+      <div class="afi-stats" id="afi-stats">Cargando...</div>
+
+      <button type="button" class="afi-zone-picker" id="afi-zone-btn">📍 Ir a zona ▾</button>
+      <div class="afi-zones-menu" id="afi-zones-menu"></div>
+
+      <button type="button" class="afi-reset-btn" id="afi-reset-btn" title="Borrar todos los reclamos y volver a los de ejemplo">🔄</button>
+
+      <div class="afi-modal-bg" id="afi-modal">
+        <div class="afi-modal" role="dialog" aria-modal="true" aria-labelledby="afi-modal-title">
+          <h3 id="afi-modal-title">Nuevo reclamo</h3>
+          <div class="afi-hint" id="afi-hint">Completá los datos y tocá "Ubicar en el mapa" para marcar el lugar.</div>
+          <label>Categoría</label>
+          <div class="afi-cat-grid" id="afi-cat-grid" role="group" aria-label="Categoría del reclamo"></div>
+          <label for="afi-title">Título del reclamo</label>
+          <input type="text" id="afi-title" placeholder="Ej: Pozo gigante en la calle" maxlength="80" autocomplete="off" />
+          <label for="afi-desc">Descripción</label>
+          <textarea id="afi-desc" placeholder="Contá qué está pasando..." maxlength="400"></textarea>
+          <label for="afi-zone">Barrio / Zona (opcional)</label>
+          <input type="text" id="afi-zone" placeholder="Ej: Centro, Bº Libertad, Ingenio..." maxlength="60" autocomplete="off" />
+          <label for="afi-photo">Foto (opcional)</label>
+          <input type="file" id="afi-photo" accept="image/*" />
+          <div id="afi-photo-preview" class="afi-photo-preview">
+            <img id="afi-photo-img" class="afi-photo-img" alt="Vista previa de la foto del reclamo" />
+          </div>
+          <div class="afi-modal-actions">
+            <button type="button" class="afi-btn-cancel" id="afi-cancel">Cancelar</button>
+            <button type="button" class="afi-btn-submit" id="afi-place">Ubicar en el mapa →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.min.js"></script>
@@ -77,15 +180,19 @@
   <!-- BACKEND: elegí UNO de los tres comentando/descomentando      -->
   <!-- ============================================================ -->
 
-  <!-- Opción A: LocalStorage (funciona sin configurar nada, cada usuario ve solo lo suyo) -->
-  <!-- <script src="storage-local.js"></script> -->
+  <!-- Opción A: LocalStorage (por defecto: sin config, funciona incluso abriendo el HTML con doble clic) -->
+  <script src="storage-local.js"></script>
 
   <!-- Opción B: Firebase (compartido, requiere firebase-config.js)
   <script type="module" src="storage-firebase.js"></script>
   -->
 
-  <!-- Opción C: Supabase (recomendado - compartido, realtime, fotos, requiere supabase-config.js) -->
+  <!-- Opción C: Supabase (compartido, realtime, fotos). Requisitos:
+       1) Copiá supabase-config.example.js → supabase-config.js y completá URL + anon key
+       2) Serví la carpeta con un servidor local (los ES modules no cargan bien con file://)
+       Luego comentá storage-local.js y descomentá la línea de abajo.
   <script type="module" src="storage-supabase.js"></script>
+  -->
   <script src="app.js"></script>
 </body>
 </html>
