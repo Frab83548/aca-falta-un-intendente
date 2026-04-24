@@ -105,7 +105,7 @@
     position: absolute;
     inset: 0;
     background-color: #0a1828;
-    /* “Mapa” abstracto + sensación cartográfica sin asset externo */
+    /* "Mapa" abstracto + sensación cartográfica sin asset externo */
     background-image:
       linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
       linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
@@ -311,7 +311,7 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-  width: 100vw;
+  width: 100%;
   max-width: none;
   margin: 0;
   padding: 0 0 var(--afi-space-md);
@@ -321,7 +321,7 @@
   .afi-wrap {
     position: relative;
     flex: 1;
-  width: 100vw;
+  width: 100%;
     min-height: 58vh;
     border-radius: var(--afi-radius-lg);
     overflow: hidden;
@@ -1332,67 +1332,283 @@
     padding: 0 0 var(--afi-space-lg);
     }
   }
-  
-  /* Móvil estrecho */
-  @media (max-width: 600px) {
+
+/* ========== MOBILE (≤ 767px) ========== */
+@media (max-width: 767px) {
+  /* HERO más compacto: se ve más mapa sin scroll */
+  .afi-hero-inner {
+    padding: 8px 12px 10px;
+  }
+
+  .afi-hero-bar {
+    font-size: 8px;
+    padding: 3px 10px;
+  }
+
+  .afi-hero-layout {
+    gap: 10px;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .afi-hero-kicker {
+    justify-content: flex-start;
+    margin: 2px 0;
+  }
+
+  .afi-hero-copy {
+    max-width: none;
+  }
+
+  .afi-hero-title {
+    font-size: 0.95rem;
+    line-height: 1.08;
+  }
+
+  .afi-hero-kicker-text {
+    font-size: 0.7rem;
+    padding: 4px 8px;
+  }
+
+  .afi-poster {
+    width: 78px;
+    height: 78px;
+  }
+
+  .afi-poster-diamond {
+    width: 58px;
+    height: 58px;
+    border-width: 2px;
+  }
+
+  .afi-poster-label {
+    font-size: 6.2px;
+  }
+
+  .afi-hero-lead {
+    font-size: 0.72rem;
+    line-height: 1.35;
+  }
+
+  /* MAPA a pantalla completa (sin bordes redondeados en mobile) */
+  .afi-wrap {
+    min-height: 72dvh;
+    border-radius: 0;
+  }
+
+  #afi-map,
+  .afi-map-shell,
+  .afi-map-shade {
+    border-radius: 0;
+  }
+
+  #afi-map .leaflet-top {
+    top: 8px;
+  }
+
+  #afi-map .leaflet-left {
+    left: 8px;
+  }
+
+  #afi-map .leaflet-top .leaflet-control,
+  #afi-map .leaflet-bottom .leaflet-control {
+    margin-top: 0;
+  }
+
+  #afi-map .leaflet-left .leaflet-control,
+  #afi-map .leaflet-right .leaflet-control {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  /* FIX CRÍTICO: ocultar el pill del topbar en mobile.
+     El rail lateral ya tiene el botón "nuevo reclamo" (triángulo naranja),
+     así que tener otro CTA arriba duplica función y colisiona con el logo. */
   .afi-topbar {
-    width: calc(100% - 126px);
-    justify-content: flex-end;
+    display: none;
   }
 
-  .afi-btn-new-pill {
-    width: min(100%, 142px);
-    height: 33px;
-    gap: 9px;
-    padding: 0 12px;
+  /* RAIL lateral: un toque más compacto */
+  .afi-side-rail {
+    top: 58px;
+    left: 8px;
+    width: 62px;
+    max-height: calc(100% - 150px);
+    padding: 8px 5px 10px;
     border-radius: 16px;
-    box-shadow:
-      5px 4px 0 #ffd400,
-      0 8px 14px rgba(0, 0, 0, 0.2);
+    gap: 10px;
   }
 
-  .afi-btn-new-pill .afi-btn-new-icon {
-    width: 15px;
+  .afi-btn-new,
+  .afi-filter-toggle,
+  .afi-visibility-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+  }
+
+  .afi-sidebar {
+    gap: 10px;
+    max-height: min(42vh, 360px);
+  }
+
+  .afi-chip {
+    width: 40px;
+    height: 40px;
+  }
+
+  .afi-chip svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .afi-chip .afi-tooltip {
+    /* En mobile no hay hover real: que no asome y tape el mapa */
+    display: none;
+  }
+
+  .afi-count-badge {
+    min-width: 15px;
     height: 15px;
+    font-size: 9px;
+    top: -4px;
+    right: -5px;
+    border-width: 1.5px;
   }
 
-  .afi-btn-new-label-visible {
-    font-size: clamp(0.62rem, 2.6vw, 0.84rem);
+  /* LOGO: corregido el transform (antes: "none scale(0.76)" era inválido)
+     + reducido y reposicionado para no tapar controles de zoom */
+  .afi-logo {
+    top: 10px;
+    right: 10px;
+    padding: 5px 9px;
+    max-width: 118px;
+    transform: rotate(2deg) scale(0.88);
+    transform-origin: top right;
+    box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.32);
   }
 
-    .afi-side-rail {
-      top: 64px;
-      left: 6px;
-    width: 70px;
-      max-height: calc(100% - 96px);
-      padding: 9px 6px;
-    }
-  
-    .afi-btn-new,
-    .afi-filter-toggle,
-    .afi-visibility-btn {
-      width: 42px;
-      height: 42px;
-    }
-  
-    .afi-logo {
-      transform: rotate(3deg) scale(0.88);
-      transform-origin: top right;
-    }
-  
-    .afi-sidebar {
-    max-height: min(47vh, 430px);
-    }
-  
-    .afi-stats {
-      font-size: 11px;
-      left: 78px;
-      max-width: calc(100% - 154px);
-    }
-  
-    .afi-zone-picker {
-      font-size: 11px;
-      padding: 6px 10px;
-    }
+  .afi-logo-t1 {
+    font-size: 8px;
   }
-  
+
+  .afi-logo-t2 {
+    font-size: 11px;
+  }
+
+  /* STATS: que no pise el rail. Lo movemos a la derecha, ancho natural */
+  .afi-stats {
+    left: auto;
+    right: 10px;
+    bottom: 10px;
+    max-width: calc(100% - 92px);
+    gap: 6px 10px;
+    padding: 7px 10px;
+    font-size: 10px;
+    border-radius: 8px;
+  }
+
+  .afi-stats span:last-child {
+    display: none;
+  }
+
+  /* Selector de zonas + reset: subidos para no pisar stats */
+  .afi-zone-picker {
+    right: 10px;
+    bottom: 46px;
+    font-size: 10px;
+    padding: 6px 9px;
+  }
+
+  .afi-zones-menu {
+    right: 10px;
+    bottom: 78px;
+    min-width: 160px;
+  }
+
+  .afi-reset-btn {
+    right: 10px;
+    bottom: 82px;
+    padding: 6px 9px;
+    font-size: 12px;
+  }
+
+  /* MODAL: bottom sheet en mobile, más cómodo de alcanzar con el pulgar */
+  .afi-modal-bg {
+    padding: 8px;
+    align-items: flex-end;
+  }
+
+  .afi-modal {
+    padding: 18px;
+    max-height: 92dvh;
+    border-radius: 18px 18px 8px 8px;
+  }
+
+  .afi-modal h3 {
+    font-size: 1.15rem;
+  }
+
+  .afi-cat-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+
+  /* Banner "colocar reclamo": sube para que no choque con logo */
+  .afi-placing-banner {
+    top: 58px;
+    font-size: 12px;
+    padding: 10px 14px;
+    max-width: calc(100% - 88px);
+  }
+}
+
+/* ========== MOBILE ESTRECHO (≤ 400px) ========== */
+@media (max-width: 400px) {
+  .afi-hero-title {
+    font-size: 0.9rem;
+  }
+
+  .afi-hero-lead {
+    font-size: 0.68rem;
+  }
+
+  .afi-side-rail {
+    left: 6px;
+    width: 58px;
+    padding: 7px 4px 9px;
+    max-height: calc(100% - 144px);
+  }
+
+  .afi-btn-new,
+  .afi-filter-toggle,
+  .afi-visibility-btn {
+    width: 38px;
+    height: 38px;
+  }
+
+  .afi-sidebar {
+    max-height: min(40vh, 320px);
+    gap: 9px;
+  }
+
+  .afi-chip {
+    width: 38px;
+    height: 38px;
+  }
+
+  .afi-chip svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .afi-logo {
+    transform: rotate(2deg) scale(0.78);
+    max-width: 108px;
+  }
+
+  .afi-stats {
+    max-width: calc(100% - 84px);
+    font-size: 9.5px;
+  }
+}
