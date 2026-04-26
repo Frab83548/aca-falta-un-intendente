@@ -78,6 +78,51 @@ window.afiStorage = {
     }
   },
 
+  /*
+    Guarda la foto como data URL dentro del propio reclamo.
+    Antes de guardarla la redimensionamos con <canvas> y la pasamos a JPEG
+    porque el localStorage tiene un cupo chico (~5 MB) y una foto cruda
+    de celular puede ocupar varios MB ella sola.
+  */
+  async uploadPhoto(file) {
+    if (!file) return null;
+    const MAX_DIM = 1024;
+    const QUALITY = 0.78;
+
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = () => reject(new Error('No se pudo leer la imagen'));
+      reader.onload = (ev) => {
+        const img = new Image();
+        img.onerror = () => reject(new Error('Formato de imagen no soportado'));
+        img.onload = () => {
+          let { width, height } = img;
+          if (width > MAX_DIM || height > MAX_DIM) {
+            if (width >= height) {
+              height = Math.round(height * (MAX_DIM / width));
+              width = MAX_DIM;
+            } else {
+              width = Math.round(width * (MAX_DIM / height));
+              height = MAX_DIM;
+            }
+          }
+          try {
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            resolve(canvas.toDataURL('image/jpeg', QUALITY));
+          } catch (err) {
+            reject(err);
+          }
+        };
+        img.src = ev.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  },
+
   // Para la versión local no hay "escucha en tiempo real"
   subscribeToChanges(callback) {
     // No hace nada. En Firebase sí se usa.
