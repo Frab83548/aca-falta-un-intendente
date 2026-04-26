@@ -171,19 +171,20 @@
   <!-- BACKEND: elegí UNO de los tres comentando/descomentando      -->
   <!-- ============================================================ -->
 
-  <!-- Opción A: LocalStorage (por defecto: sin config, funciona incluso abriendo el HTML con doble clic) -->
+  <!-- Opción A: LocalStorage (sin config, funciona offline, pero solo guarda en este navegador)
   <script src="storage-local.js"></script>
+  -->
 
   <!-- Opción B: Firebase (compartido, requiere firebase-config.js)
   <script type="module" src="storage-firebase.js"></script>
   -->
 
-  <!-- Opción C: Supabase (compartido, realtime, fotos). Requisitos:
-       1) Copiá supabase-config.example.js → supabase-config.js y completá URL + anon key
-       2) Serví la carpeta con un servidor local (los ES modules no cargan bien con file://)
-       Luego comentá storage-local.js y descomentá la línea de abajo.
+  <!-- Opción C: Supabase (ACTIVA): backend compartido + realtime + fotos en cloud.
+       Necesita supabase-config.js (gitignored localmente) o las env vars
+       VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY en Vercel (las usa build.sh).
+       Para correr local: serví con un servidor (ej: `python -m http.server 8000`)
+       porque los ES modules no funcionan con file://. -->
   <script type="module" src="storage-supabase.js"></script>
-  -->
   <script src="app.js"></script>
 </body>
 </html>
