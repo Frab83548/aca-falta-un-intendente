@@ -55,7 +55,13 @@ function fromDB(row) {
     estado: row.estado,
     autor_id: row.autor_id,
     createdAt: new Date(row.created_at).getTime(),
-    votes: row.votos_count || 0
+    votes: row.votos_count || 0,
+    // Datos del reclamante: la VISTA pública no los expone, así que
+    // normalmente estos campos llegan vacíos. Solo se ven a sí mismo
+    // cuando consulte la tabla `reclamos` con su sesión.
+    nombre:   row.reclamante_nombre   || '',
+    apellido: row.reclamante_apellido || '',
+    telefono: row.reclamante_telefono || ''
   };
 }
 
@@ -68,6 +74,9 @@ function toDB(reclamo, autorId) {
     lng: reclamo.lng,
     barrio: reclamo.zone || null,
     foto_url: reclamo.foto_url || null,
+    reclamante_nombre:   reclamo.nombre   || null,
+    reclamante_apellido: reclamo.apellido || null,
+    reclamante_telefono: reclamo.telefono || null,
     autor_id: autorId
   };
 }

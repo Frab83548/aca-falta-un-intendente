@@ -361,6 +361,9 @@
     document.getElementById('afi-title').value = '';
     document.getElementById('afi-desc').value = '';
     document.getElementById('afi-zone').value = '';
+    document.getElementById('afi-nombre').value = '';
+    document.getElementById('afi-apellido').value = '';
+    document.getElementById('afi-telefono').value = '';
     if (photoInput) photoInput.value = '';
     if (photoPreview) photoPreview.style.display = 'none';
     state.selectedCat = 'bache';
@@ -393,6 +396,9 @@
       title: title,
       desc: document.getElementById('afi-desc').value.trim(),
       zone: document.getElementById('afi-zone').value.trim(),
+      nombre: document.getElementById('afi-nombre').value.trim(),
+      apellido: document.getElementById('afi-apellido').value.trim(),
+      telefono: document.getElementById('afi-telefono').value.trim(),
       createdAt: Date.now(),
       votes: 0,
       _photoFile: photoFile

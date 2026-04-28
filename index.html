@@ -150,6 +150,18 @@
           <textarea id="afi-desc" placeholder="Contá qué está pasando..." maxlength="400"></textarea>
           <label for="afi-zone">Barrio / Zona (opcional)</label>
           <input type="text" id="afi-zone" placeholder="Ej: Centro, Bº Libertad, Ingenio..." maxlength="60" autocomplete="off" />
+
+          <div class="afi-personal-section">
+            <div class="afi-personal-header">Tus datos (opcional)</div>
+            <p class="afi-personal-note">No se publican en el mapa. Solo quedan registrados para que se pueda dar seguimiento al reclamo.</p>
+            <label for="afi-nombre">Nombre</label>
+            <input type="text" id="afi-nombre" placeholder="Tu nombre" maxlength="60" autocomplete="given-name" />
+            <label for="afi-apellido">Apellido</label>
+            <input type="text" id="afi-apellido" placeholder="Tu apellido" maxlength="60" autocomplete="family-name" />
+            <label for="afi-telefono">Teléfono</label>
+            <input type="tel" id="afi-telefono" placeholder="Ej: 388 1234567" maxlength="30" autocomplete="tel" inputmode="tel" />
+          </div>
+
           <label for="afi-photo">Foto (opcional)</label>
           <input type="file" id="afi-photo" accept="image/*" />
           <div id="afi-photo-preview" class="afi-photo-preview">

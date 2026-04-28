@@ -938,6 +938,7 @@ svg {
 }
 
 .afi-modal input[type="text"],
+.afi-modal input[type="tel"],
 .afi-modal textarea,
 .afi-modal select {
   width: 100%;
@@ -976,6 +977,27 @@ svg {
   width: 100%;
   font-size: 14px;
   color: var(--afi-bg);
+}
+
+.afi-personal-section {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px dashed rgba(15, 42, 68, 0.18);
+}
+
+.afi-personal-header {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #3d5a73;
+}
+
+.afi-personal-note {
+  margin: 4px 0 6px;
+  font-size: 12px;
+  line-height: 1.35;
+  color: #6b7f93;
 }
 
 .afi-photo-preview {
